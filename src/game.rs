@@ -42,10 +42,6 @@ impl Game {
             },
         }
 
-        if action != Action::None {
-            println!("!!! ignoring action: {:?} !!!", action);
-        }
-
         let pos = self.position.clone();
 
 
@@ -78,8 +74,6 @@ impl Game {
                 }
             }
         }
-        /*let piece_height = piece.len();
-        let piece_width = piece[0].len();*/
 
         let x = position.col;
         let y = position.row;

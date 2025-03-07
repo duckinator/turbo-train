@@ -9,13 +9,47 @@ pub struct Piece {
 
 impl Piece {
     pub fn next() -> Self {
-        LINE
+        LINE.clone()
     }
 
+    // Is there a better way to implement rotate_left() and rotate_right()?
+    // Probably.
+    //
+    // Am I looking into it right now?
+    // Nope.
+
     pub fn rotate_left(&mut self) {
+        let blocks = self.blocks.clone();
+        let a = blocks[0];
+        let e = blocks[1];
+        let i = blocks[2];
+        let m = blocks[3];
+
+        let new_blocks = [
+            [m[0], i[0], e[0], a[0]],
+            [m[1], i[1], e[1], a[1]],
+            [m[2], i[2], e[2], a[2]],
+            [m[3], i[3], e[3], a[3]],
+        ];
+
+        self.blocks = new_blocks;
     }
 
     pub fn rotate_right(&mut self) {
+        let blocks = self.blocks.clone();
+        let a = blocks[0];
+        let e = blocks[1];
+        let i = blocks[2];
+        let m = blocks[3];
+
+        let new_blocks = [
+            [a[3], e[3], i[3], m[3]],
+            [a[2], e[2], i[2], m[2]],
+            [a[1], e[1], i[1], m[1]],
+            [a[0], e[0], i[0], m[0]],
+        ];
+
+        self.blocks = new_blocks;
     }
 }
 
