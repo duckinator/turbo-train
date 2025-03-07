@@ -10,15 +10,20 @@ pub enum Action {
 }
 
 type GridLine = [u8; GRID_WIDTH];
+type Grid = [GridLine; GRID_HEIGHT];
 #[derive(Clone)]
 pub struct Game {
-    grid: [GridLine; GRID_HEIGHT],
+    grid: Grid,
     current: Option<Piece>,
     position: Position,
 }
 
 impl Game {
     pub fn tick(&mut self, action: Action) -> bool {
+        if self.current.is_none() {
+            self.new_piece();
+        }
+
         if action != Action::None {
             println!("!!! ignoring action: {:?} !!!", action);
         }
@@ -105,7 +110,11 @@ impl Game {
             }
         }
 
-        self.new_piece();
+        self.clear_piece();
+    }
+
+    fn clear_piece(&mut self) {
+        self.current = None;
     }
 
     fn new_piece(&mut self) {
@@ -140,5 +149,46 @@ impl Default for Game {
             current: Some(Piece::next()),
             position: Default::default(),
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_slow_drop() {
+        let mut game = Game::default();
+
+        let mut expected: Grid = Default::default();
+        let row = GRID_HEIGHT - 1;
+        let start_col = game.position.col;
+
+        // First piece.
+        game.current = Some(LINE);
+        game.position = Default::default();
+        for i in 0..GRID_HEIGHT {
+            assert!(game.tick(Action::None));
+        }
+
+        for col in start_col..(start_col + 4) {
+            expected[row][col] = 1;
+        }
+
+        assert_eq!(game.grid, expected);
+
+        // Second piece.
+        game.current = Some(LINE);
+        game.position = Default::default();
+        for i in 0..GRID_HEIGHT {
+            assert!(game.tick(Action::None));
+        }
+
+        let row = row - 1;
+        for col in start_col..(start_col + 4) {
+            expected[row][col] = 1;
+        }
+
+        assert_eq!(game.grid, expected);
     }
 }
