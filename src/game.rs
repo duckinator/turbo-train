@@ -12,7 +12,7 @@ pub enum Action {
 
 type GridLine = [u8; GRID_WIDTH];
 type Grid = [GridLine; GRID_HEIGHT];
-#[derive(Clone)]
+#[derive(Clone, Component)]
 pub struct Game {
     grid: Grid,
     current_landed: bool,
