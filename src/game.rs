@@ -14,14 +14,32 @@ type Grid = [GridLine; GRID_HEIGHT];
 #[derive(Clone)]
 pub struct Game {
     grid: Grid,
-    current: Option<Piece>,
+    current_landed: bool,
+    current: Piece,
     position: Position,
 }
 
 impl Game {
-    pub fn tick(&mut self, action: Action) -> bool {
-        if self.current.is_none() {
+    pub fn stuck(&mut self) -> bool {
+        // If we can't drop into the game area, we're done.
+        self.position.row < GRID_FIRST_VISIBLE && self.collides(self.position.clone().down())
+    }
+
+    pub fn tick(&mut self, action: Action) {
+        if self.current_landed {
             self.new_piece();
+        }
+
+        match action {
+            Action::None => {},
+            Action::RotateLeft => self.current.rotate_left(),
+            Action::RotateRight => self.current.rotate_right(),
+            Action::DropSoft => {},
+            Action::DropHard => {
+                while !self.current_landed {
+                    self.tick(Action::None);
+                }
+            },
         }
 
         if action != Action::None {
@@ -30,25 +48,16 @@ impl Game {
 
         let pos = self.position.clone();
 
-        if pos.row < GRID_FIRST_VISIBLE && self.collides(pos.down()) {
-            // If we can't drop into the game area, we're done.
-            return false;
-        }
 
         if pos.row == (GRID_HEIGHT - 1) || self.collides(pos.down()) {
             self.place();
         } else {
             self.position = pos.down();
         }
-
-        // By default, continue.
-        true
     }
 
     pub fn collides(&self, position: Position) -> bool {
-        let Some(current) = &self.current else { return false };
-
-        let piece = current.blocks;
+        let piece = self.current.blocks;
         let grid = &self.grid;
 
         let mut piece_height = 0;
@@ -89,7 +98,7 @@ impl Game {
     }
 
     fn place(&mut self) {
-        let Some(piece) = &self.current else { return };
+        let piece = &self.current;
 
         if self.collides(self.position) {
             //panic!("called grid.place(piece) with a piece that collides?");
@@ -114,17 +123,20 @@ impl Game {
     }
 
     fn clear_piece(&mut self) {
-        self.current = None;
+        self.current_landed = true;
     }
 
     fn new_piece(&mut self) {
-        self.current = Some(Piece::next());
+        self.current = Piece::next();
         self.position = Position::default();
+        self.current_landed = false;
     }
 
     pub fn print(&self) {
         let mut clone: Game = self.clone();
-        clone.place();
+        if !self.current_landed {
+            clone.place();
+        }
 
         for idx in 0..clone.grid.len() {
             let row = clone.grid[idx];
@@ -146,7 +158,8 @@ impl Default for Game {
     fn default() -> Self {
         Game {
             grid: [[0; GRID_WIDTH]; GRID_HEIGHT],
-            current: Some(Piece::next()),
+            current_landed: false,
+            current: Piece::next(),
             position: Default::default(),
         }
     }
@@ -165,10 +178,10 @@ mod test {
         let start_col = game.position.col;
 
         // First piece.
-        game.current = Some(LINE);
+        game.current = LINE;
         game.position = Default::default();
         for i in 0..GRID_HEIGHT {
-            assert!(game.tick(Action::None));
+            game.tick(Action::None);
         }
 
         for col in start_col..(start_col + 4) {
@@ -178,10 +191,10 @@ mod test {
         assert_eq!(game.grid, expected);
 
         // Second piece.
-        game.current = Some(LINE);
+        game.current = LINE;
         game.position = Default::default();
         for i in 0..GRID_HEIGHT {
-            assert!(game.tick(Action::None));
+            game.tick(Action::None);
         }
 
         let row = row - 1;

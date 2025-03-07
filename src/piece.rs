@@ -11,6 +11,12 @@ impl Piece {
     pub fn next() -> Self {
         LINE
     }
+
+    pub fn rotate_left(&mut self) {
+    }
+
+    pub fn rotate_right(&mut self) {
+    }
 }
 
 pub const LINE: Piece = Piece {

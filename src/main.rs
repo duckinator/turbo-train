@@ -18,13 +18,10 @@ const GRID_HEIGHT: usize = 6 + PIECE_HEIGHT;
 fn main() {
     let mut game = Game::default();
 
-    loop {
+    while !game.stuck() {
         print!("{esc}[2J{esc}[1;1H", esc = 27 as char);
-        let cont = game.tick(Action::None);
+        game.tick(Action::None);
         game.print();
-        if !cont {
-            break;
-        }
         std::thread::sleep(std::time::Duration::from_millis(300));
     }
 
