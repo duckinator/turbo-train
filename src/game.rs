@@ -27,6 +27,10 @@ impl Game {
     }
 
     pub fn tick(&mut self, action: Action) {
+        if self.stuck() {
+            return;
+        }
+
         if self.current_landed {
             self.new_piece();
         }
