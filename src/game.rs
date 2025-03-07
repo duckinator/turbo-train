@@ -7,6 +7,7 @@ pub enum Action {
     RotateRight,
     DropSoft,
     DropHard,
+    DumpLine,
 }
 
 type GridLine = [u8; GRID_WIDTH];
@@ -32,14 +33,15 @@ impl Game {
 
         match action {
             Action::None => {},
-            Action::RotateLeft => self.current.rotate_left(),
-            Action::RotateRight => self.current.rotate_right(),
+            Action::RotateLeft => return self.current.rotate_left(),
+            Action::RotateRight => return self.current.rotate_right(),
             Action::DropSoft => {},
             Action::DropHard => {
                 while !self.current_landed {
                     self.tick(Action::None);
                 }
             },
+            Action::DumpLine => return self.dump_line(),
         }
 
         let pos = self.position.clone();
@@ -114,6 +116,19 @@ impl Game {
         }
 
         self.clear_piece();
+    }
+
+    fn dump_line(&mut self) {
+        let cols = self.grid[0].len();
+        for row in (1..self.grid.len()).rev() {
+            for col in 0..cols {
+                self.grid[row - 1][col] = self.grid[row][col];
+            }
+        }
+
+        for col in 0..cols {
+            self.grid[self.grid.len() - 1][col] = 0;
+        }
     }
 
     fn clear_piece(&mut self) {
@@ -218,4 +233,17 @@ mod test {
         assert_eq!(game.grid, expected);
     }
 
+    #[test]
+    fn test_dump_line() {
+        let mut game = Game::default();
+        for col in 0..GRID_WIDTH {
+            game.grid[GRID_HEIGHT - 1][col] = 1;
+        }
+
+        assert_eq!(game.grid[GRID_HEIGHT - 1], [1; GRID_WIDTH]);
+
+        game.tick(Action::DumpLine);
+
+        assert_eq!(game.grid[GRID_HEIGHT - 1], [0; GRID_WIDTH]);
+    }
 }
