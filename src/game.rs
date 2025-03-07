@@ -141,6 +141,18 @@ impl Game {
         self.current_landed = false;
     }
 
+    pub fn compare(&self, expected: Grid) -> bool {
+        for row in 0..self.grid.len() {
+            for col in 0..self.grid[0].len() {
+                if self.grid[row][col] != expected[row][col] {
+                    return false;
+                }
+            }
+        }
+
+        true
+    }
+
     pub fn print(&self) {
         let mut clone: Game = self.clone();
         if !self.current_landed {
@@ -245,5 +257,20 @@ mod test {
         game.tick(Action::DumpLine);
 
         assert_eq!(game.grid[GRID_HEIGHT - 1], [0; GRID_WIDTH]);
+    }
+
+    #[test]
+    fn test_compare() {
+        let mut game = Game::default();
+        for col in 0..GRID_WIDTH {
+            game.grid[GRID_HEIGHT - 1][col] = 1;
+        }
+
+        let mut expected: Grid = Default::default();
+        for col in 0..GRID_WIDTH {
+            expected[GRID_HEIGHT - 1][col] = 1;
+        }
+
+        assert_eq!(game.compare(expected), true);
     }
 }
