@@ -170,7 +170,7 @@ mod test {
     use super::*;
 
     #[test]
-    fn test_slow_drop() {
+    fn test_natural_drop() {
         let mut game = Game::default();
 
         let mut expected: Grid = Default::default();
@@ -204,4 +204,24 @@ mod test {
 
         assert_eq!(game.grid, expected);
     }
+
+    #[test]
+    fn test_hard_drop() {
+        let mut game = Game::default();
+
+        let mut expected: Grid = Default::default();
+        let row = GRID_HEIGHT - 1;
+        let start_col = game.position.col;
+
+        game.current = LINE;
+        game.position = Default::default();
+        game.tick(Action::DropHard);
+
+        for col in start_col..(start_col + 4) {
+            expected[row][col] = 1;
+        }
+
+        assert_eq!(game.grid, expected);
+    }
+
 }
