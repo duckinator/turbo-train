@@ -85,8 +85,8 @@ impl Game {
 
         let mut piece_width = 0;
         for row in &piece {
-            for col in 0..row.len() {
-                if row[col] == 1 && col > piece_width {
+            for (col, &value) in row.iter().enumerate() {
+                if value == 1 && col > piece_width {
                     piece_width = col;
                 }
             }
