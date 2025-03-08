@@ -9,19 +9,19 @@ pub struct Position {
 
 impl Position {
     pub fn down(&self) -> Self {
-        let mut new = self.clone();
+        let mut new = *self;
         new.row += 1;
         new
     }
 
     pub fn left(&self) -> Self {
-        let mut new = self.clone();
+        let mut new = *self;
         new.col -= 1;
         new
     }
 
     pub fn right(&self) -> Self {
-        let mut new = self.clone();
+        let mut new = *self;
         new.col += 1;
         new
     }

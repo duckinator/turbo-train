@@ -30,7 +30,7 @@ impl Piece {
     // Nope.
 
     pub fn rotate_left(&mut self) {
-        let blocks = self.blocks.clone();
+        let blocks = self.blocks;
         let a = blocks[0];
         let e = blocks[1];
         let i = blocks[2];
@@ -47,7 +47,7 @@ impl Piece {
     }
 
     pub fn rotate_right(&mut self) {
-        let blocks = self.blocks.clone();
+        let blocks = self.blocks;
         let a = blocks[0];
         let e = blocks[1];
         let i = blocks[2];

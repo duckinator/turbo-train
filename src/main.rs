@@ -5,7 +5,6 @@ mod position;
 
 use bevy::prelude::*;
 
-use color::*;
 use game::*;
 use piece::*;
 use position::Position;
@@ -78,7 +77,7 @@ fn setup(mut commands: Commands) {
 }
 
 fn main() {
-    let interval = 1.0;
+    //let interval = 1.0;
     let interval = 0.1;
 
     App::new()

@@ -57,7 +57,7 @@ impl Game {
             },
         }
 
-        let pos = self.position.clone();
+        let pos = self.position;
 
 
         if pos.row == (GRID_HEIGHT - 1) || self.collides(pos.down()) {
@@ -99,12 +99,12 @@ impl Game {
         let x_upper_bound = std::cmp::min(x + piece_width, GRID_WIDTH);
 
         let area: Vec<Vec<u8>> = grid[y..y_upper_bound].iter().map(|r| r[x..x_upper_bound].into()).collect();
-        let v_piece: Vec<Vec<u8>> = piece.clone().map(|r| r.into()).into();
+        let v_piece: Vec<Vec<u8>> = piece.map(|r| r.into()).into();
 
         let comparison: Vec<u8> = area
             .iter()
             .zip(v_piece)
-            .map(|(a, b)| a.into_iter().zip(b).map(|(l, r)| l*r).collect::<Vec<_>>().into_iter().sum())
+            .map(|(a, b)| a.iter().zip(b).map(|(l, r)| l*r).collect::<Vec<_>>().into_iter().sum())
             .collect();
         let total: u8 = comparison.iter().sum();
 
@@ -133,7 +133,7 @@ impl Game {
             }
         }
 
-        let result = (piece.clone(), self.position.clone());
+        let result = (piece.clone(), self.position);
 
         self.clear_piece();
 
