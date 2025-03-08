@@ -1,7 +1,7 @@
-use rand::prelude::IndexedRandom;
-use super::PIECE_WIDTH;
 use super::PIECE_HEIGHT;
+use super::PIECE_WIDTH;
 use super::color::PieceColor;
+use rand::prelude::IndexedRandom;
 
 type PieceLine = [u8; PIECE_WIDTH];
 #[derive(Clone, Debug)]
@@ -12,7 +12,10 @@ pub struct Piece {
 
 impl Piece {
     pub fn next() -> Self {
-        [LINE, SQUARE, ELL, ESS, TEE].choose(&mut rand::rng()).unwrap().clone()
+        [LINE, SQUARE, ELL, ESS, TEE]
+            .choose(&mut rand::rng())
+            .unwrap()
+            .clone()
     }
 
     pub fn width(&self) -> usize {

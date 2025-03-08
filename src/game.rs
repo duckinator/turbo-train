@@ -36,29 +36,28 @@ impl Game {
         }
 
         match action {
-            Action::None => {},
+            Action::None => {}
             Action::RotateLeft => {
                 self.current.rotate_left();
                 return None;
-            },
+            }
             Action::RotateRight => {
                 self.current.rotate_right();
                 return None;
-            },
-            Action::DropSoft => {},
+            }
+            Action::DropSoft => {}
             Action::DropHard => {
                 while !self.current_landed {
                     self.tick(Action::None);
                 }
-            },
+            }
             Action::DumpLine => {
                 self.dump_line();
                 return None;
-            },
+            }
         }
 
         let pos = self.position;
-
 
         if pos.row == (GRID_HEIGHT - 1) || self.collides(pos.down()) {
             return Some(self.place());
@@ -98,13 +97,23 @@ impl Game {
         let y_upper_bound = std::cmp::min(y + piece_height, GRID_HEIGHT);
         let x_upper_bound = std::cmp::min(x + piece_width, GRID_WIDTH);
 
-        let area: Vec<Vec<u8>> = grid[y..y_upper_bound].iter().map(|r| r[x..x_upper_bound].into()).collect();
+        let area: Vec<Vec<u8>> = grid[y..y_upper_bound]
+            .iter()
+            .map(|r| r[x..x_upper_bound].into())
+            .collect();
         let v_piece: Vec<Vec<u8>> = piece.map(|r| r.into()).into();
 
         let comparison: Vec<u8> = area
             .iter()
             .zip(v_piece)
-            .map(|(a, b)| a.iter().zip(b).map(|(l, r)| l*r).collect::<Vec<_>>().into_iter().sum())
+            .map(|(a, b)| {
+                a.iter()
+                    .zip(b)
+                    .map(|(l, r)| l * r)
+                    .collect::<Vec<_>>()
+                    .into_iter()
+                    .sum()
+            })
             .collect();
         let total: u8 = comparison.iter().sum();
 

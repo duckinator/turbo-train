@@ -29,6 +29,9 @@ impl Position {
 
 impl Default for Position {
     fn default() -> Self {
-        Self { col: (GRID_WIDTH - PIECE_WIDTH) / 2, row: 0 }
+        Self {
+            col: (GRID_WIDTH - PIECE_WIDTH) / 2,
+            row: 0,
+        }
     }
 }

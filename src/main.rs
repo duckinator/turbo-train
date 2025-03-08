@@ -82,7 +82,10 @@ fn main() {
 
     App::new()
         .insert_resource(Game::default())
-        .insert_resource(GameClock(Timer::from_seconds(interval, TimerMode::Repeating)))
+        .insert_resource(GameClock(Timer::from_seconds(
+            interval,
+            TimerMode::Repeating,
+        )))
         .add_plugins(DefaultPlugins)
         .add_systems(Startup, setup)
         .add_systems(Update, tick)
