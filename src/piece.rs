@@ -1,15 +1,25 @@
 use super::PIECE_WIDTH;
 use super::PIECE_HEIGHT;
+use super::color::PieceColor;
 
 type PieceLine = [u8; PIECE_WIDTH];
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Piece {
     pub blocks: [PieceLine; PIECE_HEIGHT],
+    pub color: PieceColor,
 }
 
 impl Piece {
     pub fn next() -> Self {
         LINE.clone()
+    }
+
+    pub fn width(&self) -> usize {
+        self.blocks[0].len()
+    }
+
+    pub fn height(&self) -> usize {
+        self.blocks.len()
     }
 
     // Is there a better way to implement rotate_left() and rotate_right()?
@@ -60,6 +70,7 @@ pub const LINE: Piece = Piece {
         [0,0,0,0],
         [0,0,0,0],
     ],
+    color: PieceColor::Red,
 };
 
 pub const SQUARE: Piece = Piece {
@@ -69,6 +80,7 @@ pub const SQUARE: Piece = Piece {
         [0,0,0,0],
         [0,0,0,0],
     ],
+    color: PieceColor::Yellow,
 };
 
 pub const ELL: Piece = Piece {
@@ -78,6 +90,7 @@ pub const ELL: Piece = Piece {
         [0,0,0,0],
         [0,0,0,0],
     ],
+    color: PieceColor::Orange,
 };
 
 pub const ESS: Piece = Piece {
@@ -87,6 +100,7 @@ pub const ESS: Piece = Piece {
         [0,0,0,0],
         [0,0,0,0],
     ],
+    color: PieceColor::Green,
 };
 
 pub const TEE: Piece = Piece {
@@ -96,4 +110,5 @@ pub const TEE: Piece = Piece {
         [0,0,0,0],
         [0,0,0,0],
     ],
+    color: PieceColor::Purple,
 };

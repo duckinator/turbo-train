@@ -1,7 +1,7 @@
 use super::GRID_WIDTH;
 use super::PIECE_WIDTH;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Debug)]
 pub struct Position {
     pub row: usize,
     pub col: usize,

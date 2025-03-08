@@ -26,9 +26,9 @@ impl Game {
         self.position.row < GRID_FIRST_VISIBLE && self.collides(self.position.clone().down())
     }
 
-    pub fn tick(&mut self, action: Action) {
+    pub fn tick(&mut self, action: Action) -> Option<(Piece, Position)> {
         if self.stuck() {
-            return;
+            return None;
         }
 
         if self.current_landed {
@@ -37,25 +37,36 @@ impl Game {
 
         match action {
             Action::None => {},
-            Action::RotateLeft => return self.current.rotate_left(),
-            Action::RotateRight => return self.current.rotate_right(),
+            Action::RotateLeft => {
+                self.current.rotate_left();
+                return None;
+            },
+            Action::RotateRight => {
+                self.current.rotate_right();
+                return None;
+            },
             Action::DropSoft => {},
             Action::DropHard => {
                 while !self.current_landed {
                     self.tick(Action::None);
                 }
             },
-            Action::DumpLine => return self.dump_line(),
+            Action::DumpLine => {
+                self.dump_line();
+                return None;
+            },
         }
 
         let pos = self.position.clone();
 
 
         if pos.row == (GRID_HEIGHT - 1) || self.collides(pos.down()) {
-            self.place();
+            return Some(self.place());
         } else {
             self.position = pos.down();
         }
+
+        None
     }
 
     pub fn collides(&self, position: Position) -> bool {
@@ -97,7 +108,7 @@ impl Game {
         total > 0
     }
 
-    fn place(&mut self) {
+    fn place(&mut self) -> (Piece, Position) {
         let piece = &self.current;
 
         if self.collides(self.position) {
@@ -119,7 +130,11 @@ impl Game {
             }
         }
 
+        let result = (piece.clone(), self.position.clone());
+
         self.clear_piece();
+
+        result
     }
 
     fn dump_line(&mut self) {
