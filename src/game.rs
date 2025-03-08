@@ -74,9 +74,9 @@ impl Game {
         let grid = &self.grid;
 
         let mut piece_height = 0;
-        for row in 0..piece.len() {
-            for col in 0..piece[row].len() {
-                if piece[row][col] == 1 {
+        for row in &piece {
+            for &value in row {
+                if value == 1 {
                     piece_height += 1;
                     break;
                 }
@@ -84,9 +84,9 @@ impl Game {
         }
 
         let mut piece_width = 0;
-        for row in 0..piece.len() {
-            for col in 0..piece[row].len() {
-                if piece[row][col] == 1 && col > piece_width {
+        for row in &piece {
+            for col in 0..row.len() {
+                if row[col] == 1 && col > piece_width {
                     piece_width = col;
                 }
             }
