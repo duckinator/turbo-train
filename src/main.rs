@@ -49,6 +49,10 @@ fn tick(
                 let col = position.col + col_offset;
                 let row = position.row + row_offset;
 
+                if row > GRID_HEIGHT || col > GRID_WIDTH {
+                    break;
+                }
+
                 if piece.blocks[row_offset][col_offset] != 0 {
                     commands.spawn((
                         Mesh2d(meshes.add(square)),
