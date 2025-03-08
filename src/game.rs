@@ -124,7 +124,7 @@ impl Game {
         let piece = &self.current;
 
         if self.collides(self.position) {
-            //panic!("called grid.place(piece) with a piece that collides?");
+            eprintln!("called grid.place(piece) with a piece that collides?");
         }
 
         let row_offset = self.position.row;
